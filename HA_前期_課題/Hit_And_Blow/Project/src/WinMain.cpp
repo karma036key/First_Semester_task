@@ -98,7 +98,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// ----------------------------------------------------
 	InputInit();			// 入力処理初期化関数の呼び出し
 	DrawInit();				// 描画処理初期化関数の呼び出し
-	bool CreateTargetNumber(); // 問題となる数字の作成
+	CreateTargetNumber(); // 問題となる数字の作成
 	count  = 0;// countを０で初期化
 	cursor = 0;// cursorを０で初期化
 	for (int i = 0; i < DIGITS; i++)// 配列 num を for文 で初期化
@@ -165,6 +165,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 						// チェックした結果が true の時、以下の処理を行う
 						// hit, blowの数をチェックし、その返り値を gameClear に代入
 						// 入力回数 count を 1増やす
+
+
 					IsMatch(&hit, &blow);
 					if (hit==4)
 					{
@@ -209,40 +211,37 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 // ==============================
 bool CreateTargetNumber()
 {
-	srand(time(NULL));		// 乱数をtime()関数で初期
+	srand((unsigned int)time(NULL));		// 乱数をtime()関数で初期
+	bool isValid = false;
 
 	// 0 から DIGITS より小さい間繰り返す for文
 	// ループカウンタの変数名は i とする
-	for(int i = 0; i < DIGITS; i++)
-	{
-		target[i] = 0;
-
-		bool isValid;
+	// 以下の処理を行う
+	// 同じ数字がないかをチェック
+	// 今回の数字が無効な値だったら isValid を false に
+	// 有効な値だったら isValid を true にする
+	//for (int i = 0; i < DIGITS; i++)
+	//{
 		do {
-			target[i] = rand()%10;	// 現在の要素へ、乱数値を代入
-			for (int a = 0; a <= DIGITS; a++)
+			for (int i = 0; i < DIGITS; i++)
 			{
-				for (int j = 0; j < a; j++) {
-					if (target[i] || (target[j]))
-					{
-						isValid = true;
-					}
-					else 
+				target[i] = rand() % 10;
+				for (int j = 0; j < DIGITS; j++)
+				{
+
+					if (target[i] == target[j])
 					{
 						isValid = false;
 					}
+					else
+					{
+						isValid = true;
+					}
 				}
 			}
-			// 以下の処理を行う
-			// 同じ数字がないかをチェック
-			// 今回の数字が無効な値だったら isValid を false に
-			// 有効な値だったら isValid を true にする
-		} while( isValid == false );
-		if (isValid == true)
-		{
-			return true;
-		}
-	}
+		} while (isValid = false);
+	//}	
+	return true;
 }
 
 // ==============================

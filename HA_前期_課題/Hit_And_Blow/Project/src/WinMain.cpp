@@ -273,14 +273,14 @@ bool IsValidNumber()
 // ==============================
 bool IsValidDigit( int digit )
 {
-	if( digit < 0 || digit >= DIGITS )
+	if (digit < 0 || digit >= DIGITS)
 	{
 		return false;
 	}
 
 	// 0 から DIGITS より小さい間繰り返す for文
 	// ループカウンタの変数名は i とする
-	for(int i = 0; i < DIGITS; i++)
+	for(int i = 0; i < digit; i++)
 	{
 		// 以下の処理を行う
 		// digit と i が同じ場合は調べる必要がないので continue する

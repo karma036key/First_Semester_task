@@ -53,10 +53,9 @@ int map[STAGE_WIDTH][STAGE_HEIGHT];
 // 盤面の x, y の位置に石が置けるかどうか
  // bool型の戻り値、int型の引数x,yを持つIsPutStone関数を宣言
 bool IsPutStone(int x, int y);
-int CheckWinner();
 // 勝者が居るかを調べる
 // int型の戻り値を持つCheckWinner関数を宣言
-int CheckWinner();
+int CheckWinner(int turn);
 
 // ==============================
 // Main関数
@@ -112,7 +111,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// 以下、毎フレーム更新する処理
 		// ----------------------------------------------------
 		InputUpdate();			// 入力処理更新関数の呼(び出し
-		CheckWinner();//勝利者情報入力	// 勝利者のチェック
+		CheckWinner(turn);//勝利者情報入力	// 勝利者のチェック
 
 		// --- 入力状況をチェックして、適切な処理を行う
 		// 決着がついてない時だけ入力を受け付けるように if文 でチェックする
@@ -146,7 +145,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					// 以下の処理を実装する
 					// 選択されている座標と対応するmap配列の要素へturnの値を代入
 					// 次のターンに回すため、turnの値を変更する
-					map[pos_x][pos_y] = turn %2;
+					map[pos_x][pos_y] = turn % 2;
 					turn++;
 				}
 			}
@@ -157,7 +156,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			DrawInformation(turn);	// 情報文章を描画
 			DrawGameClear(winner);	// ゲームクリアの文字を描画
 			DrawBgLine();	// 枠線を描画
-			DrawStone(pos_x, pos_y, turn%2); //２重for文を使って盤面の石を描画する
+			DrawStone(pos_x, pos_y, turn % 2); //２重for文を使って盤面の石を描画する
 			DrawCursor(pos_x, pos_y); //カーソルを描画
 
 			// ＤＸライブラリを使う上で、モニターへゲーム画面を表示するためのお約束
@@ -176,14 +175,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return 0;
 	}
 }
-	// ==============================
-	// 盤面の x, y の位置に石が置けるかどうか
-	// true = 置ける
-	// false = 置けない
-	// ==============================
+// ==============================
+// 盤面の x, y の位置に石が置けるかどうか
+// true = 置ける
+// false = 置けない
+// ==============================
 bool IsPutStone(int x, int y)
 {
-	if (map[y][x]== STONE_MAX)	//　盤面の x, y の位置に石が置けるならtrue, 置けないならfalseを返す処理
+	if (map[y][x] == STONE_MAX)	//　盤面の x, y の位置に石が置けるならtrue, 置けないならfalseを返す処理
 	{
 		return true;
 	}
@@ -198,7 +197,7 @@ bool IsPutStone(int x, int y)
 // ==============================
 // 勝者が居るかを調べる
 // ==============================
-int CheckWinner()
+int CheckWinner(int turn)
 {
 	//※※　以下の処理を実装する
 	// 縦、横、斜めが同じ石かどうかを調べる
@@ -208,20 +207,70 @@ int CheckWinner()
 	// 全てのマスに石が置かれていたら引き分け
 
 	// 上記のいずれかでも無かったらWINNER_NONを返す
+	int count[9];
 	
-		for (int x = 0; x < STAGE_HEIGHT; x++)
+	for (int i = 0; i < 9; i++)
+	{		count[i] = {};	}
+		
+	for (int x = 0; x < STAGE_HEIGHT; x++)
+	{
+		for (int y = 0; y < STAGE_WIDTH; y++)
 		{
-			for (int y = 0; y < STAGE_WIDTH; y++)
+			if (map[y][y] == turn % 2)
 			{
-				if (map[y][y] == )
+				count[0];
+			}
+			if (map[y][x] == turn % 2)
+			{
+				if (y == 1)
 				{
-					
-				}else if(map)
+					count[1]++;
+				}
+				else if (y == 2)
 				{
+					count[2]++;
+				}
+				else if (y == 3)
+				{
+					count[3]++;
+				}
 
+				if (x == 1)
+				{
+					count[4]++;
+				}
+				else if (x == 2)
+				{
+					count[5]++;
+				}
+				else if (x == 3)
+				{
+					count[6]++;
 				}
 			}
+			if (map[2][0] == turn % 2|| map[1][1] == turn % 2|| map[0][2] == turn % 2)
+			{
+				count[7]++;
+			}
+			if (map[y][x] == turn % 2)
+			{
+				count[8]++;
+			}
 		}
-	
-	
+	}
+	for (int i = 0; i < 9; i++)
+	{
+		if (count[8]==STAGE_WIDTH*STAGE_HEIGHT)
+		{
+			return WINNER_DRAW;
+		}
+		else if (count[i] == 3)
+		{
+			return turn % 2;
+		}
+		else
+		{
+			return WINNER_NON;
+		}
+	}
 }

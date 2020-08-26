@@ -211,8 +211,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 // ==============================
 bool CreateTargetNumber()
 {
-	srand((unsigned int)time(NULL));		// 乱数をtime()関数で初期
-	bool isValid = false;
+	srand((unsigned)time(NULL));		// 乱数をtime()関数で初期
+	
 
 	// 0 から DIGITS より小さい間繰り返す for文
 	// ループカウンタの変数名は i とする
@@ -222,26 +222,30 @@ bool CreateTargetNumber()
 	// 有効な値だったら isValid を true にする
 	//for (int i = 0; i < DIGITS; i++)
 	//{
-		do {
-			for (int i = 0; i < DIGITS; i++)
+	bool isValid;
+	do {
+		for (int i = 0; i < DIGITS; i++)
+		{
+			target[i] = rand() % 10;
+			for (int j = 0; j < DIGITS || i == j; j++)
 			{
-				target[i] = rand() % 10;
-				for (int j = 0; j < DIGITS; j++)
-				{
 
-					if (target[i] == target[j])
-					{
-						isValid = false;
-					}
-					else
-					{
-						isValid = true;
-					}
+				if (target[i] == target[j])
+				{
+					isValid = false;
+				}
+				else
+				{
+					isValid = true;
 				}
 			}
-		} while (isValid = false);
-	//}	
-	return true;
+		}
+	} while (isValid == true);
+	
+	if (isValid == true) 
+	{
+		return true;
+	}
 }
 
 // ==============================
@@ -255,12 +259,9 @@ bool IsValidNumber()
 	for( int i = 0; i < DIGITS; i++ )
 	{
 		// i 番目の桁が無効だったら false を返す
-		for (int j = 0; j < i; j++)
+		if(IsValidDigit(i) == false)
 		{
-			if (num[i] == num[j] )
-			{
-				return false;
-			}
+			return false;
 		}
 	}
 	return true;
@@ -285,7 +286,7 @@ bool IsValidDigit( int digit )
 		// digit と i が同じ場合は調べる必要がないので continue する
 		// num配列の digit 番目と i 番目を比較し、
 		// 同じだったら重複しているということなので false を返す
-		if (num[digit] == num[i])
+		if (num[digit] == num[i] || digit == i)
 		{
 			return false;
 		}

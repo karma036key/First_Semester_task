@@ -10,4 +10,4 @@ void DrawInformation( int turn );			// 情報文章を描画
 void DrawGameClear( int winner );			// ゲームクリアの文字を描画
 void DrawBgLine();							// 枠線を描画
 void DrawStone( int x, int y, int stone );	// 盤面のマス(x, y)に石を描画
-void DrawCursor( int x, int y );			// カーソルを描画
+void DrawCursor(int x, int y);			// カーソルを描画

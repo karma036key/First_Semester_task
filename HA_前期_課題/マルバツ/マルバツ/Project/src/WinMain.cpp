@@ -172,8 +172,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// ＤＸライブラリを使う上での終了処理
 		// ----------------------------------------------------
 		DxLib_End();
-		return 0;
-	}
+		
+	}return 0;
 }
 // ==============================
 // 盤面の x, y の位置に石が置けるかどうか
@@ -216,11 +216,11 @@ int CheckWinner(int turn)
 	{
 		for (int y = 0; y < STAGE_WIDTH; y++)
 		{
-			if (map[y][y] == turn % 2)
+			if (map[y][y] == turn % STONE_MAX)
 			{
 				count[0];
 			}
-			if (map[y][x] == turn % 2)
+			if (map[y][x] == turn % STONE_MAX)
 			{
 				if (y == 1)
 				{
@@ -248,11 +248,11 @@ int CheckWinner(int turn)
 					count[6]++;
 				}
 			}
-			if (map[2][0] == turn % 2|| map[1][1] == turn % 2|| map[0][2] == turn % 2)
+			if (map[2][0] == turn % STONE_MAX || map[1][1] == turn % STONE_MAX || map[0][2] == turn % STONE_MAX)
 			{
 				count[7]++;
 			}
-			if (map[y][x] == turn % 2)
+			if (map[y][x] == turn % STONE_MAX)
 			{
 				count[8]++;
 			}
@@ -266,7 +266,7 @@ int CheckWinner(int turn)
 		}
 		else if (count[i] == 3)
 		{
-			return turn % 2;
+			return turn % STONE_MAX;
 		}
 		else
 		{

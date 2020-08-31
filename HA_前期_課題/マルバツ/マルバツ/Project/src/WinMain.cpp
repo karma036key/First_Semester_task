@@ -29,6 +29,7 @@
 	ホームページ、リファレンスページ（用意されている関数の説明）を見てみてください。
 */
 
+
 /**
 ■〇×(三目並べ)のルール
 	ルールについては、自分で調べて把握するようにしてください
@@ -111,7 +112,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// 以下、毎フレーム更新する処理
 		// ----------------------------------------------------
 		InputUpdate();			// 入力処理更新関数の呼(び出し
-		CheckWinner(turn);//勝利者情報入力	// 勝利者のチェック
+		winner = CheckWinner(turn);//勝利者情報入力	// 勝利者のチェック
 
 		// --- 入力状況をチェックして、適切な処理を行う
 		// 決着がついてない時だけ入力を受け付けるように if文 でチェックする
@@ -121,18 +122,34 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			if (IsPushKey(MY_INPUT_DOWN))
 			{
 				pos_y -= 1;
+				if (pos_y > 0)
+				{
+					pos_y = 0;
+				}
 			}
 			else if (MY_INPUT_UP)
 			{
 				pos_y += 1;
+				if (pos_y < 3)
+				{
+					pos_y = 3;
+				}
 			}
 			else if (MY_INPUT_RIGHT)
 			{
 				pos_x -= 1;
+				if (pos_x > 0)
+				{
+					pos_x = 0;
+				}
 			}
 			else if (MY_INPUT_LEFT)
 			{
 				pos_x += 1;
+				if (pos_x > 3)
+				{
+					pos_x = 3;
+				}
 			}
 			// 決定(=エンターキー)が押された時の処理
 			else if (MY_INPUT_ENTER)
@@ -149,32 +166,34 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					turn++;
 				}
 			}
+		}	// if (winner == WINNER_NON)
 
 
-			// 以下、描画処理
-			// ----------------------------------------------------
-			DrawInformation(turn);	// 情報文章を描画
-			DrawGameClear(winner);	// ゲームクリアの文字を描画
-			DrawBgLine();	// 枠線を描画
-			DrawStone(pos_x, pos_y, turn % 2); //２重for文を使って盤面の石を描画する
-			DrawCursor(pos_x, pos_y); //カーソルを描画
-
-			// ＤＸライブラリを使う上で、モニターへゲーム画面を表示するためのお約束
-			// 必ずループの最後で呼び出す
-			// ----------------------------------------------------
-			ScreenFlip();
-		}
-
-		// 後始末
+		// 以下、描画処理
 		// ----------------------------------------------------
-		DrawEnd();		// 描画処理終了
+		DrawInformation(turn);	// 情報文章を描画
+		DrawGameClear(winner);	// ゲームクリアの文字を描画
+		DrawBgLine();	// 枠線を描画
+		DrawStone(pos_x, pos_y, turn % 2); //２重for文を使って盤面の石を描画する
+		DrawCursor(pos_x, pos_y); //カーソルを描画
 
-		// ＤＸライブラリを使う上での終了処理
+		// ＤＸライブラリを使う上で、モニターへゲーム画面を表示するためのお約束
+		// 必ずループの最後で呼び出す
 		// ----------------------------------------------------
-		DxLib_End();
+		ScreenFlip();
+	}	// while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
+
+	// 後始末
+	// ----------------------------------------------------
+	DrawEnd();		// 描画処理終了
+
+	// ＤＸライブラリを使う上での終了処理
+	// ----------------------------------------------------
+	DxLib_End();
 		
-	}return 0;
+	return 0;
 }
+
 // ==============================
 // 盤面の x, y の位置に石が置けるかどうか
 // true = 置ける
